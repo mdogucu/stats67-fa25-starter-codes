@@ -1,0 +1,224 @@
+---
+title: "Discussion 2: Summarizing Data & Study Design"
+author: "Stats 67 Teaching Team"
+format: html
+---
+
+
+## 1. Summarizing Data
+
+## Load Packages
+
+```{r}
+library(datasets)
+library(tidyverse)
+```
+
+### Load mtcars Dataset
+
+```{r}
+mtcars <- mtcars %>% 
+  mutate(am = as.factor(am))
+```
+
+## Dataset
+
+### Description given by the author
+
+```{r}
+?mtcars
+```
+
+## First Look
+
+Take a glimpse at the data.
+
+1.  How many rows and columns are there in the "mtcars" dataset?
+2.  Any categorical variables?
+3.  Any numeric variables?
+
+```{r}
+glimpse(mtcars)
+```
+
+## First and last few lines
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+tail(mtcars)
+```
+
+
+## Summarizing Categorical Data
+
+### Count by Transmission Types (am)
+
+How many samples are there in each transmission type?
+
+```{r}
+count(mtcars, am)
+```
+
+### Bar plots
+
+#### Bar plot with counts
+
+```{r}
+ggplot(mtcars) +
+  aes(x = am) +
+  geom_bar()
+  
+```
+
+## Summarizing Numeric Data
+
+### A few basic statistics
+
+#### Mean
+
+What is the meaning of "Mean"?
+
+```{r}
+summarize(mtcars, mean(mpg))
+```
+
+#### Median
+
+What is the meaning of "Median"?
+
+```{r}
+summarize(mtcars, median(mpg))
+```
+
+#### Quantiles
+
+The 3rd Quantile of mpg:
+
+```{r}
+summarize(mtcars, quantile(mpg, 0.25))
+```
+
+What about the 1st Quantile? What is the meaning of "Quantile"?
+
+#### Standard Deviation and Variance
+
+What are the meanings of "Standard Deviation" and "Variance"?
+
+```{r}
+summarize(mtcars, sd(mpg))
+```
+
+```{r}
+summarize(mtcars, var(mpg))
+```
+
+---
+
+### Histogram
+
+```{r}
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 8)
+```
+
+### Boxplot of Miles per Gallon (mpg)
+
+On the boxplot, where is the median? Q1 and Q3? Interquartile Range (IQR)? Whiskers?
+
+```{r}
+ggplot(mtcars,
+       aes(y = mpg)) + 
+  scale_x_discrete( ) +
+  geom_boxplot()
+```
+
+## Summarizing More Than One Variable
+
+### Boxplot of Miles per Gallon (mpg) by Transmission Types (am)
+
+How many variables are represented in this plot?
+
+Are they numeric or categorical?
+
+```{r}
+ggplot(mtcars, aes(x = am, y = mpg)) +
+  geom_boxplot()
+```
+
+---
+
+### Scatterplot of Miles per Gallon (mpg) and Horse Power (hp)
+
+How many variables are represented in this plot?
+
+Are they numeric or categorical?
+
+```{r}
+ggplot(mtcars, aes(x = mpg,
+                 y = hp)) +
+  geom_point()
+```
+
+
+
+## 2. Sampling
+
+Sampling is the process of selecting a subset of individuals or items from a larger population for the purpose of drawing conclusions about the population.  Let's dive into random sampling and explore some real examples.
+
+---
+
+### Random Sampling
+
+Random sampling ensures each individual/item in the population has an equal chance of being selected. It reduces bias in your sample.
+
+- **What is the difference between a population and a sample?**  
+
+---
+
+**Example**: Let's consider a new example for sampling. You want to survey the average number of hours university students spend on social media per day.
+
+- **What is the population in this scenario?**
+- **What is the sampling method you would select for this survey?** Do not just write the title of the sampling method but also explain the steps you are utilizing (e.g., get a list of registrar or post on a website etc).
+- **Is your sample a random sample? Why or why not?**
+- **Could there be any bias in the sampling process? What kind of bias might exist?**
+
+---
+
+### Random Sampling vs. Convenience Sampling
+
+Read the following two scenarios and decide which one uses random sampling and which uses convenience sampling.
+
+1. You randomly select 200 students from the entire student population at your university.
+2. You survey students waiting in line at a campus coffee shop.
+
+**Which sampling method is less likely to introduce bias? Why?**
+
+---
+
+## 3. Study Design in Research
+
+The way a study is designed plays a critical role in the validity and reliability of the conclusions drawn from it. Let’s explore **observational studies** and **experimental designs**.
+
+---
+
+### Observational Study
+
+In an observational study, researchers observe the subjects without interfering. There is no treatment or intervention involved.
+ 
+- **What are the strengths of an observational study?**  
+- **What are the limitations?**
+
+---
+
+### Experiment Design
+
+An experimental design involves manipulating one or more variables (treatments) and observing the effects.
+
+**Example**: Suppose you are studying the effect of two different diets on weight loss over a 6-week period. The two diets are a low-carb diet and a low-fat diet.
+
+- **What is the treatment in this experiment?**
+- **What variables will you control for (e.g., exercise, initial weight)?**
+
