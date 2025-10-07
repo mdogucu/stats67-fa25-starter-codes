@@ -29,29 +29,6 @@ mtcars <- mtcars %>%
 ?mtcars
 ```
 
-## First Look
-
-Take a glimpse at the data.
-
-1.  How many rows and columns are there in the "mtcars" dataset?
-2.  Any categorical variables?
-3.  Any numeric variables?
-
-```{r}
-glimpse(mtcars)
-```
-
-## First and last few lines
-
-```{r}
-head(mtcars)
-```
-
-```{r}
-tail(mtcars)
-```
-
-
 ## Summarizing Categorical Data
 
 ### Count by Transmission Types (am)
@@ -95,7 +72,7 @@ summarize(mtcars, median(mpg))
 
 #### Quantiles
 
-The 3rd Quantile of mpg:
+The 1st Quantile of mpg:
 
 ```{r}
 summarize(mtcars, quantile(mpg, 0.25))
