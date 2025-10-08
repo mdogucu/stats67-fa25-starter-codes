@@ -1,0 +1,233 @@
+---
+title: "Discussion 2: Summarizing Data & Study Design"
+author: "Stats 67 Teaching Team"
+format: html
+---
+
+
+## 1. Summarizing Data
+
+## Load Packages
+
+```{r}
+library(datasets)
+library(tidyverse)
+```
+
+### Load mtcars Dataset
+
+```{r}
+# wrangling the data for us, setting am column to a factor (categorical variable)
+mtcars <- mtcars %>% 
+  mutate(am = as.factor(am))
+```
+
+## Dataset
+
+### Description given by the author
+
+```{r}
+?mtcars
+```
+
+## Summarizing Categorical Data
+
+### Count by Transmission Types (am)
+
+How many samples are there in each transmission type?
+
+```{r}
+count(mtcars, am)
+# df$variable_name = c(13/(13+19), 19/(19+13))
+print(13/(19+13)) # prop of am that is 1 (manual transmisision)
+print(19/(19+13)) # prop of am that is 0 (automatic transmisision)
+```
+
+### Bar plots
+
+#### Bar plot with counts
+
+
+```{r}
+ggplot(mtcars) +
+  aes(x = am) +
+  geom_bar()
+  
+```
+
+## Summarizing Numeric Data
+
+### A few basic statistics
+
+#### Mean
+
+What is the meaning of "Mean"?
+
+```{r}
+summarize(mtcars, mean(mpg))
+```
+
+#### Median
+
+What is the meaning of "Median"? observation whose value falls in the very middle of the dataset (50% of the observations are less than it, and 50% of the observations are greater than it)
+
+```{r}
+summarize(mtcars, median(mpg))
+```
+
+#### Quartiles
+
+The 1st Quartile of mpg:
+
+```{r}
+summarize(mtcars, quantile(mpg, 0.25))
+```
+
+What about the 1st Quartile? What is the meaning of "Quartile"?
+25% of the data is below the 1st quartile
+median = 2nd quartile
+
+#### Standard Deviation and Variance
+
+What are the meanings of "Standard Deviation" and "Variance"?
+
+```{r}
+summarize(mtcars, sd(mpg))
+```
+
+```{r}
+summarize(mtcars, var(mpg))
+```
+
+---
+
+### Histogram
+
+```{r}
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 8)
+```
+
+### Boxplot of Miles per Gallon (mpg)
+
+On the boxplot, where is the median? Q1 and Q3? Interquartile Range (IQR)? Whiskers?
+
+```{r}
+ggplot(mtcars,
+       aes(y = mpg)) + 
+  scale_x_discrete( ) +
+  geom_boxplot()
+```
+
+Does anyone have trouble seeing how skewed the data is using a boxplot?
+
+## Summarizing More Than One Variable
+
+### Boxplot of Miles per Gallon (mpg) by Transmission Types (am)
+
+How many variables are represented in this plot?
+
+Are they numeric or categorical?
+
+```{r}
+ggplot(mtcars, aes(x = am, y = mpg)) +
+  geom_boxplot()
+```
+
+---
+
+### Scatterplot of Miles per Gallon (mpg) and Horse Power (hp)
+
+How many variables are represented in this plot?
+
+Are they numeric or categorical?
+
+```{r}
+ggplot(mtcars, aes(x = mpg,
+                 y = hp)) +
+  geom_point()
+```
+
+
+
+## 2. Sampling
+
+Sampling is the process of selecting a subset of individuals or items from a larger population for the purpose of drawing conclusions about the population.  Let's dive into random sampling and explore some real examples.
+
+---
+
+### Random Sampling
+
+Random sampling ensures each individual/item in the population has an equal chance of being selected. It reduces bias in your sample.
+
+- **What is the difference between a population and a sample?**  
+population: overall group of people that we're interested in
+sample: subset of that groups that we have the information for (and we use this information to draw conclusions about the population)
+
+---
+
+**Example**: Let's consider a new example for sampling. You want to survey the average number of hours university students spend on social media per day.
+
+- **What is the population in this scenario?**
+all university students
+- **What is the sampling method you would select for this survey?** Do not just write the title of the sampling method but also explain the steps you are utilizing (e.g., get a list of registrar or post on a website etc).
+
+simple random sample (use random number generator to select students from campus roster)
+stratified: stratified on year
+cluster: 10 random universities
+
+- **Is your sample a random sample? Why or why not?**
+yes random 
+
+- **Could there be any bias in the sampling process? What kind of bias might exist?**
+non-response bias
+
+---
+
+### Random Sampling vs. Convenience Sampling
+
+Read the following two scenarios and decide which one uses random sampling and which uses convenience sampling.
+
+1. You randomly select 200 students from the entire student population at your university.
+2. You survey students waiting in line at a campus coffee shop.
+
+**Which sampling method is less likely to introduce bias? Why?**
+when we sample at a coffee shop:
+- location (near which school or dept?)
+- people who have money and time to get coffee
+
+convenience sampling example: lecture, dorm/apartment
+
+---
+
+## 3. Study Design in Research
+
+The way a study is designed plays a critical role in the validity and reliability of the conclusions drawn from it. Let’s explore **observational studies** and **experimental designs**.
+
+---
+
+### Observational Study
+
+In an observational study, researchers observe the subjects without interfering. There is no treatment or intervention involved.
+ 
+- **What are the strengths of an observational study?**  
+low in cost, easier to do
+- **What are the limitations?**
+can't conclude causal relationship (only associations)
+
+---
+
+### Experiment Design
+
+An experimental design involves manipulating one or more variables (treatments) and observing the effects.
+
+**Example**: Suppose you are studying the effect of two different diets on weight loss over a 6-week period. The two diets are a low-carb diet and a low-fat diet.
+
+- **What is the treatment in this experiment?**
+diet (low-carb or low-fat)
+- **What variables will you control for (e.g., exercise, initial weight)?** confounding variables
+exercise that the individuals do
+amount of sleep
+meals per day
+metabolism
+
