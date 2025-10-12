@@ -1,0 +1,222 @@
+# Load Packages
+
+```{r}
+library(datasets)
+library(tidyverse)
+```
+
+
+# About R
+
+Basic functions and language
+
+```{r}
+print('hello woRld')
+birth_years <- c(1996, 2001, 1999)
+print(birth_years)
+```
+
+# Dataframe in R
+
+```{r}
+data.frame(person = c('Jack', 'Allen', 'Lisa'), birth_years = birth_years)
+
+?data.frame
+```
+
+You could also check the use of a function or a package by searching in the help panel.
+
+# Tidyverse
+
+After function names do not leave any spaces.
+
+Before and after operators (e.g. <-, =) leave spaces.
+
+Put a space after a comma, not before.
+
+Object names are all lower case, with words separated by an underscore.
+
+
+# Markdown and Quarto
+
+word
+
+_word_
+
+__word__
+
+~~word~~
+
+If you need R variables in text, you can do this: the birth_years are:
+`r birth_years`
+
+# Load mtcars Dataset
+
+```{r}
+mtcars <- mtcars %>% 
+  mutate(am = as.factor(am))
+```
+
+# Dataset
+
+## Description given by the author
+
+```{r}
+?mtcars
+```
+
+# First Look
+
+Take a glimpse at the data.
+
+1.  How many rows and columns are there in the "mtcars" dataset?
+
+There are 32 rows and 11 columns
+
+2.  Any categorical variables?
+
+'vs' and 'am' are categorical variables (both are binary).
+
+3.  Any numeric variables?
+
+The other 9 variables are numeric.
+
+```{r}
+glimpse(mtcars)
+```
+
+# First and last few lines
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+tail(mtcars)
+```
+
+
+# Summarizing Categorical Data
+
+## Count by Transmission Types (am)
+
+How many samples are there in each transmission type?
+
+```{r}
+count(mtcars, am)
+```
+
+## Bar plots
+
+### Bar plot with counts
+
+```{r}
+ggplot(mtcars) +
+  aes(x = am) +
+  geom_bar()
+  
+```
+
+# Summarizing Numeric Data
+
+## A few basic statistics
+
+### Mean
+
+What is the meaning of "Mean"?
+
+The mean is the average value which is calculated by summing all of the observations and dividing by the total number of observations.
+
+```{r}
+summarize(mtcars, mean(mpg))
+```
+
+### Median
+
+What is the meaning of "Median"?
+
+The median is another measure of center that is determined by choosing the middle value when the observations are ordered from smallest to largest.
+
+```{r}
+summarize(mtcars, median(mpg))
+```
+
+### Quantiles
+
+The 3rd Quantile of mpg:
+
+```{r}
+summarize(mtcars, quantile(mpg, 0.75))
+```
+
+What about the 1st Quantile? What is the meaning of "Quantile"?
+
+```{r}
+summarize(mtcars, quantile(mpg, 0.25))
+```
+
+Quantiles divide the data into quarter. Thus, 25\% of the data is less than the 1st quantile while 75\% of the data is less than the 3rd quantile.
+
+### Standard Deviation and Variance
+
+What are the meanings of "Standard Deviation" and "Variance"?
+
+Standard deviation and variance are both measures of the spread of the data. See the Week 1 lecture slides for the formulas to calculate standard deviation and variance.
+
+```{r}
+summarize(mtcars, sd(mpg))
+```
+
+```{r}
+summarize(mtcars, var(mpg))
+```
+
+## Histogram
+
+```{r}
+ggplot(mtcars, aes(x = mpg)) +
+  geom_histogram(bins = 8)
+```
+
+## Boxplot of Miles per Gallon (mpg)
+
+On the boxplot, where is the median? Q1 and Q3? Interquartile Range (IQR)? Whiskers?
+
+```{r}
+ggplot(mtcars,
+       aes(y = mpg)) + 
+  scale_x_discrete( ) +
+  geom_boxplot()
+```
+
+The median is the middle line of the box. Q1 and Q3 are the bottom and top lines of the box. The IQR is Q3 - Q1. Whiskers help show the spread of the data.
+
+# Summarizing More Than One Variable
+
+## Boxplot of Miles per Gallon (mpg) by Transmission Types (am)
+
+How many variables are represented in this plot?
+
+Are they numeric or categorical?
+
+```{r}
+ggplot(mtcars, aes(x = am, y = mpg)) +
+  geom_boxplot()
+```
+The plot represents two variables ('am' and 'mpg'). 'am' is categorical while 'mpg' is numeric.
+
+## Scatterplot of Miles per Gallon (mpg) and Horse Power (hp)
+
+How many variables are represented in this plot?
+
+Are they numeric or categorical?
+
+```{r}
+ggplot(mtcars, aes(x = mpg,
+                 y = hp)) +
+  geom_point()
+```
+We now plot two numeric variables ('mpg' and 'hp')
+
+
+
