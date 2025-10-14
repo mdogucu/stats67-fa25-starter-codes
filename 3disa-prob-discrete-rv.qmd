@@ -16,6 +16,7 @@ Probability helps us quantify uncertainty and make predictions about the likelih
 - **If your event is getting heads, what is the outcome for this event?**
 
 ```{r}
+library(tidyverse)
 # Simulate the sample space for flipping a coin
 sample_space <- c("Heads", "Tails")
 
