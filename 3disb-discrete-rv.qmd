@@ -147,11 +147,11 @@ _Example: From a deck of 52 cards, randomly pick a card, let the event be that t
 
 ## Geometric Distribution
 
-The Geometric distribution represents the number of failures before the first success when running independent trials with success probability $p$.
+The Geometric distribution represents the number of failures before the first success when running independent trials with success probability $\pi$.
 
-$X\sim Geometric(p)$
+$X\sim Geometric(\pi)$
 
-pmf: $f(x)=(1-p)^xp\ ,x=0,1,2,...$
+pmf: $f(x)=(1-\pi)^x\pi\ ,x=0,1,2,...$
 
 $\mu=E(X)=\frac{1-\pi}{\pi}$
 
@@ -378,3 +378,4 @@ __4.32 Stenographer's typos.__ A very skilled court stenographer makes one typog
 (b) What are the mean and the standard deviation of the number of typos this stenographer makes?
 
 (d) Calculate the probability that this stenographer makes at most 2 typos in a given hour.
+
