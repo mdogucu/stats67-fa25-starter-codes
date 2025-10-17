@@ -15,14 +15,14 @@ $X\sim Bernoulli(\pi)$
 
 | x    | 0       | 1     |
 |:-----|:--------|:------|
-| f(x) | $1-p$ | $p$ |
+| f(x) | $1-\pi$ | $\pi$ |
 
-pmf: $f(x)=p^x(1-p)^{1-x},\ x\in \{0,1\}$
+pmf: $f(x)=\pi^x(1-\pi)^{1-x},\ x\in \{0,1\}$
 
 
 $\mu=E(X)=\pi$
 
-$\sigma^2=Var(X)=p(1-p)$
+$\sigma^2=Var(X)=\pi(1-\pi)$
 
 _Example: From a deck of 52 cards, randomly pick a card, let the event be that the suit of the card picked is heart._
 
@@ -30,13 +30,13 @@ _Example: From a deck of 52 cards, randomly pick a card, let the event be that t
 
 The Geometric distribution represents the number of failures before the first success when running independent trials with success probability $p$.
 
-$X\sim Geometric(p)$
+$X\sim Geometric(\pi)$
 
-pmf: $f(x)=(1-p)^xp\ ,x=0,1,2,...$
+pmf: $f(x)=(1-\pi)^x\pi\ ,x=0,1,2,...$
 
-$\mu=E(X)=\frac{1-p}{p}$
+$\mu=E(X)=\frac{1-\pi}{\pi}$
 
-$\sigma^2=Var(X)=\frac{1-p}{p^2}$
+$\sigma^2=Var(X)=\frac{1-\pi}{\pi^2}$
 
 ```{r, echo=F, warning=F}
 # Parameters
@@ -91,13 +91,13 @@ pgeom(q = 3, prob = 0.25)
 
 The Binomial distribution represents the number of successes out of $n$ independent trials with success probability $p$.
 
-$X\sim Binomial(n,p)$
+$X\sim Binomial(n,\pi)$
 
-pmf: $f(x)={n \choose x}p^x(1-p)^{n-x},\ x\in \{0,1,2,...,n\}$
+pmf: $f(x)={n \choose x}\pi^x(1-\pi)^{n-x},\ x\in \{0,1,2,...,n\}$
 
-$E(X)=np$
+$E(X)=n\pi$
 
-$Var(X)=np(1-p)$
+$Var(X)=n\pi(1-\pi)$
 
 ```{r, echo=F, warning=F}
 # Binomial, fixed n=10
