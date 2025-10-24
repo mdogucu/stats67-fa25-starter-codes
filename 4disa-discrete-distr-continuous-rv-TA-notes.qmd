@@ -1,0 +1,378 @@
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+```
+
+# Discrete Distributions
+
+## Bernoulli Distribution
+
+The Bernoulli distribution represents the outcome (success/failure) of an event with success probability of $\pi$.
+
+the bernoulli distr is a special case of the binomial distr where n = 1
+
+$X\sim Bernoulli(\pi)$
+
+| x    | 0       | 1     |
+|:-----|:--------|:------|
+| f(x) | $1-\pi$ | $\pi$ |
+
+pmf: $f(x)=\pi^x(1-\pi)^{1-x},\ x\in \{0,1\}$
+
+
+$\mu=E(X)=\pi$
+
+$\sigma^2=Var(X)=\pi(1-\pi)$
+
+_Example: From a deck of 52 cards, randomly pick a card, let the event be that the suit of the card picked is heart._
+
+X ~ Bernoulli(pi = 13/52)
+
+## Geometric Distribution
+
+The Geometric distribution represents the number of failures before the first success when running independent trials with success probability $\pi$.
+
+$X\sim Geometric(\pi)$
+
+pmf: $f(x)=(1-\pi)^x\pi\ ,x=0,1,2,...$
+
+$\mu=E(X)=\frac{1-\pi}{\pi}$
+
+$\sigma^2=Var(X)=\frac{1-\pi}{\pi^2}$
+
+```{r, echo=F, warning=F}
+# Parameters
+p_values <- c(0.1, 0.3, 0.5)  # Probability values
+x <- 0:10  # Range of x values (number of failures before the first success)
+
+# Create a data frame for ggplot
+data <- data.frame(
+  x = rep(x, times = length(p_values)),
+  p = unlist(lapply(p_values, function(p) dgeom(x, prob = p))),
+  prob = rep(p_values, each = length(x))
+)
+
+# Plot using ggplot2
+ggplot(data, aes(x = x, y = p, color = factor(prob), group = prob)) +
+  geom_line(size=1) +             # Add lines
+  geom_point(size=2) +            # Add points
+  scale_color_manual(
+    values = c("red", "blue", "green"),
+    name = "pi"
+  ) + 
+  scale_x_continuous(breaks=0:10) +
+  labs(
+    title = "PMF of Geometric Distribution",
+    x = "Number of Failures (x)",
+    y = "Probability"
+  ) +
+  theme_minimal(base_size = 16)  # Increase overall font size
+```
+
+_Exercise: From a deck of 52 cards, randomly pick a card, if the suit of the card picked is not heart, then replace the card into the deck, shuffle the deck and pick a new card. Repeat the procedure until the first heart is picked. What is the probability that the number of trials before the last one equals to 3? What is the probability that the number of trials before the last one is smaller or equal to 3?_
+
+X ~ Geom(pi = 13/52)
+
+P(X = 3) = dgeom(x = 3, pi = 13/52)
+
+```{r}
+dgeom(x = 3, prob = 13/52)
+```
+
+P(X <= 3) = pgeom(q = 3, pi = 13/52)
+
+```{r}
+pgeom(q = 3, prob = 13/52)
+```
+
+
+
+```{r, include=F}
+# f(3)
+dgeom(x = 3, prob = 0.25)
+
+# Calculate F(3) by f(0) + f(1) + f(2) + f(3)
+dgeom(x = 0, prob = 0.25) + dgeom(x = 1, prob = 0.25)  + dgeom(x = 2, prob = 0.25) + dgeom(x=3, prob=0.25)
+sum(dgeom(x=0:3, prob=0.25))
+
+# Directly calculate F(3)
+pgeom(q = 3, prob = 0.25) 
+```
+
+
+
+### Exercises from [the book](https://www.openintro.org/go/?id=os4_for_screen_readers&referrer=/book/os/index.php)
+
+4.14 on page 166
+
+part a) dgeom(x = 9, prob = 0.02)
+
+## Binomial Distribution
+
+The Binomial distribution represents the number of successes out of $n$ independent trials with success probability $\pi$.
+
+$X\sim Binomial(n,\pi)$
+
+pmf: $f(x)={n \choose x}\pi^x(1-\pi)^{n-x},\ x\in \{0,1,2,...,n\}$
+
+$E(X)=n\pi$
+
+$Var(X)=n\pi(1-\pi)$
+
+```{r, echo=F, warning=F}
+# Binomial, fixed n=10
+n <- 10  # Number of trials
+p_values <- c(0.2, 0.5, 0.8)  # Probability of success
+x <- 0:n  # Range of x values (number of successes)
+
+# Create a data frame for ggplot
+data <- data.frame(
+  x = rep(x, times = length(p_values)),
+  p = unlist(lapply(p_values, function(p) dbinom(x, size = n, prob = p))),
+  prob = rep(p_values, each = length(x))
+)
+
+# Plot using ggplot2
+ggplot(data, aes(x = x, y = p, color = factor(prob), group = prob)) +
+  geom_line(size = 1) +             # Add lines
+  geom_point(size = 2) +            # Add points
+  scale_color_manual(
+    values = c("red", "blue", "green"),
+    name = "pi"
+  ) + 
+  scale_x_continuous(breaks = 0:n) +
+  labs(
+    title = "PMF of Binomial Distribution, fixed n=10",
+    x = "Number of Successes (x)",
+    y = "Probability"
+  ) +
+  theme_minimal(base_size = 16)     # Increase overall font size
+```
+
+```{r, warning=F, echo=F}
+p <- 0.5  # Fixed probability of success
+n_values <- c(10, 20, 40)  # Different values for number of trials
+x_values <- lapply(n_values, function(n) 0:n)  # Range of x values for each n
+
+# Create a data frame for ggplot
+data <- data.frame(
+  x = unlist(x_values),
+  p = unlist(lapply(seq_along(n_values), function(i) dbinom(x_values[[i]], size = n_values[i], prob = p))),
+  n = factor(rep(n_values, times = sapply(x_values, length)))  # Add n as a factor
+)
+
+# Plot using ggplot2
+ggplot(data, aes(x = x, y = p, color = n, group = n)) +
+  geom_line(size = 1) +             # Add lines
+  geom_point(size = 2) +            # Add points
+  scale_color_manual(
+    values = c("red", "blue", "green"),
+    name = "n"
+  ) + 
+  labs(
+    title = "PMF of Binomial Distribution, fixed pi=0.5",
+    x = "Number of Successes (x)",
+    y = "Probability"
+  ) +
+  theme_minimal(base_size = 16)     # Increase overall font size
+```
+
+_Exercise: From a deck of 52 cards, randomly pick a card and record the suit, then replace the card into the deck, shuffle the deck, pick a new card and record the suit. Repeat the procedure 10 times. What is the probability that 8 of the 10 suits recorded are hearts? What is the probability that at least 8 of the 10 suits recorded are hearts?_
+
+X ~ Binomial(n = 10, p = 13/52)
+
+P(X = 8) = dbinom(x = 8, size = 10, prob = 13/52)
+
+P(X >= 8) = 1 - P(X <= 7) = 1 - pbinom(q = 7, size = 10, prob = 13/52)
+
+P(X <= 10) - P(X <= 7) = pbinom(q = 10, size = 10, prob = 13/52) - pbinom(q = 7, size = 10, prob = 13/52)
+
+```{r}
+print(1 - pbinom(q = 7, size = 10, prob = 13/52))
+
+print(pbinom(q = 10, size = 10, prob = 13/52) - pbinom(q = 7, size = 10, prob = 13/52))
+```
+
+
+```{r, include=F}
+# f(8)
+dbinom(x = 8, size = 10, prob = 0.25)
+
+# f(8) + f(9) + f(10)
+dbinom(x = 8, size = 10, prob = 0.25) + dbinom(x = 9, size = 10, prob = 0.25) + dbinom(x = 10, size = 10, prob = 0.25)
+sum(dbinom(x = 8:10, size = 10, prob = 0.25))
+
+# 1 - F(7)
+1 - pbinom(q = 7, size = 10, prob = 0.25)
+```
+
+### Exercises from [the book](https://www.openintro.org/go/?id=os4_for_screen_readers&referrer=/book/os/index.php)
+
+4.22 on page 176
+
+X ~ Binom(n = 10, prob = 0.07)
+
+a) P(X >= 1) = 1 - pbinom(q = 0, size = 10, prob = 0.07)
+
+1 - dbinom(x = 0, size = 10, prob = 0.07)
+
+b) Calculate the probability that exactly 2 of them suffer from arachnophobia.
+
+P(X = 2) = dbinom(x = 2, size = 10, prob = 0.07)
+
+c) Calculate the probability that at most 1 of them suffers from arachnophobia.
+
+P(X <= 1) = pbinom(q = 1, size = 10, prob = 0.07)
+
+## Poisson Distribution
+
+The Poisson distribution can represent the number of events occurring within a fixed period of time.
+
+$X\sim Poisson(\lambda)$
+
+pmf: $f(x)=\frac{\lambda^x}{x!}e^{-\lambda},\ x=0,1,2,...$
+
+$E(X)=\lambda$
+
+$Var(X)=\lambda$
+
+```{r, echo=F, warning=F}
+# Parameters for Poisson distribution
+lambda_values <- c(1, 2, 5, 10)  # Lambda values
+x <- 0:20  # Range of x values
+
+# Create a data frame for ggplot
+data <- data.frame(
+  x = rep(x, times = length(lambda_values)),
+  p = unlist(lapply(lambda_values, function(lambda) dpois(x, lambda = lambda))),
+  lambda = rep(lambda_values, each = length(x))
+)
+
+# Plot using ggplot2
+ggplot(data, aes(x = x, y = p, color = factor(lambda), group = lambda)) +
+  geom_line(size = 1) +             # Add lines
+  geom_point(size = 2) +            # Add points
+  scale_color_manual(
+    values = c("red", "blue", "green", "purple"),
+    name = expression(lambda)
+  ) + 
+  scale_x_continuous(breaks = 0:20) +
+  labs(
+    title = "PMF of Poisson Distribution",
+    x = "Number of Events (x)",
+    y = "Probability"
+  ) +
+  theme_minimal(base_size = 16)     # Increase overall font size
+```
+
+_Exercise: It is estimated that one bus arrives at the stop every 6 minutes. What is the probability that 10 buses will arrive at the stop during the next hour? What is the probability that the number of buses that arrive next hour is between 4 and 15 (both included)?_
+
+X1 ~ Poisson(lambda = 1) (every 6 minutes)
+
+X2 ~ Poisson(lambda = 10) (every hour)
+
+P(X2 = 10) = dpois(x = 10, lambda = 10)
+
+```{r}
+dpois(x = 10, lambda = 10)
+```
+
+P(4 <= X2 <= 15) = P(X <= 15) - P(X < 4) = P(X <= 15) - P(X <= 3) = ppois(q = 15, lambda = 10) - ppois(q = 3, lambda = 10)
+
+```{r}
+ppois(q = 15, lambda = 10) - ppois(q = 3, lambda = 10)
+```
+
+
+```{r, include=F}
+lambda = 60 / 6
+
+# f(10)
+dpois(x = 10, lambda = lambda)
+
+# f(4) + f(5) + ... + f(15)
+sum(dpois(x = 4:15, lambda = lambda))
+
+# F(15) - F(3)
+ppois(q = 15, lambda = lambda) - ppois(q = 3, lambda = lambda)
+```
+
+
+
+### Exercises from [the book](https://www.openintro.org/go/?id=os4_for_screen_readers&referrer=/book/os/index.php)
+
+4.32 on page 185
+
+Would it be considered unusual if this stenographer made 4 typos in a given hour? Yes, this would be considered unusual, the probability of this happening is 0.01
+
+dpois(x = 4, lambda = 1)
+
+```{r}
+dpois(x = 4, lambda = 1)
+```
+
+
+# Probability Density Function (pdf)
+
+For a continuous random variable  $X$, the pdf is denoted by $f(x)$ and satisfies:
+
+1. $f(x)\geq0$ for all $x$,
+2. $\int_{-\infty}^{\infty} f(x) \, dx = 1$.
+
+P(X = #) = 0
+
+
+```{r}
+# Example: f(x) = 2x for x in (0, 1)
+x <- seq(0, 1, by = 0.01)
+y <- 2*x
+plot(x, y, type = "l", lwd = 2, ylab = "Density", xlab = "x", main = "PDF of f(x)=2x in (0,1)")
+```
+
+## Probability over an interval
+
+The probability that X (random variable) falls within the interval [a,b] is found by taking the integral of the pdf from a to b. This tells us how likely it is that X will take in a value within this range. 
+$P(a \leq X \leq b) = \int_{a}^{b} f(x) \, dx$ 
+
+pdf = f(x)
+
+
+
+# Cumulative Distribution Function (CDF)
+
+The Cumulative Distribution Function, F(x), gives us the probability that the random variable X is less than or equal to x (P(X <= x)).
+
+The CDF of $X$ is given by $F(x) = \int_{-\infty}^{x} f(t) \, dt$.
+
+```{r}
+# Example: f(x) = 2x for x in (0, 1)
+y_cdf <- x^2
+plot(x, y_cdf, type = "l", lwd = 2, ylab = "Probability", xlab = "x", main = "CDF of f(x)=2x in (0,1)")
+```
+
+P(X <= 0.4)
+
+# Expected Value
+
+The expected value of $X$ is given by $E(X) = \int_{-\infty}^{\infty} x \cdot f(x) \, dx$.
+
+
+```{r}
+# Example: f(x) = 2x for x in (0, 1)
+mean_val <- integrate(function(x) x * 2*x, 0, 1)$value
+mean_val
+```
+
+# Variance
+
+The variance of $X$ is given by $\text{Var}(X) = E((X - E(X))^2) = \int_{-\infty}^{\infty} (x - E(X))^2 \cdot f(x) \, dx$.
+
+```{r}
+# Example: f(x) = 2x for x in (0, 1)
+var_val <- integrate(function(x) (x - mean_val)^2 * 2*x, 0, 1)$value
+var_val
+```
+
+What is the relationship between a CDF and a PDF?
