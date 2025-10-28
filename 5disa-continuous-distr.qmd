@@ -43,7 +43,7 @@ Imagine a spinner with a continuous circular scale ranging from 0 to 1.
 
 # Exponential Distribution
 
-The Exponential distribution is defined by its rate parameter $\lambda$. The pdf of an Exponential distribution is given by:
+The Exponential distribution is defined by its rate parameter $\lambda$, and is usually used to model the time between events (or time to an event). The pdf of an Exponential distribution is given by:
 
 $f(x) = \lambda e^{-\lambda x} \, \text{ for } x \geq 0$
 
@@ -74,7 +74,12 @@ Suppose a bus arrives at a certain bus stop every 20 minutes on average.
 
 1. What is the distribution of the time a person have to wait?
 
-2.Find the probability that a bus arrives within 10 minutes
+## Insert answer here
+
+2. Find the probability that a bus arrives within 10 minutes
+
+## Insert answer here
+
 
 If a bus arrives at a certain bus stop every 20 minutes on average, then the rate parameter $\lambda$ is $1/20$ buses per minute.
 
@@ -122,6 +127,8 @@ Example: 4.4 on page 160, 4.7 on page 161
 Z- Scores are used to show how far a certain value is from the mean.
 $Z = \frac{X - \mu}{\sigma}$
 
+Essentially, how many standard deviations away a value is from the mean.
+
 Example: Let X represent the heights of adult males and $X \sim N(70, 3^2)$.
 What is the Z-score of a male who is 76 inches tall? What does this tell us?
 
@@ -151,9 +158,9 @@ pnorm(76,70,3)
 ```
 
 
-What percentage of men are between the heights 65in and 75in?
+What percentage of men are between the heights 65 inches and 75 inches?
 
-P(65<X<75)= P(X < 75)- P(X<65)
+P(65 < X < 75)= P(X < 75)- P(X < 65)
 ```{r}
 pnorm(q=75, mean=70,sd=3)-pnorm(q=65,mean=70,sd=3)
 ```
