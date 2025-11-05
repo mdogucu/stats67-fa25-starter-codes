@@ -1,0 +1,279 @@
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+```
+
+# Inference for Single Proportion
+
+Conditions to meet:
+
+1.  Independence: The sample data are independent.
+
+2.  Sample Size: There needs to be at least 10 successes and 10 failures in the sample.
+
+3.  Sample Size vs. Population Size: The sample size is smaller than 10% of the population.
+
+## Confidence Interval for a Single Proportion
+
+A confidence interval for a single proportion estimates the proportion of a population that has a particular attribute.
+
+### Sampling Distributions
+
+Recall that under certain conditions, we have the following for the sampling distribution of a single proportion:
+
+$p \sim approx. N(\pi, \frac{\pi(1-\pi)}{n})$
+
+### Standard Error
+
+Under this sampling distribution, the standard error is:
+
+$\sqrt{\frac{p(1-p)}{n}}$
+
+### Confidence Interval
+
+Our confidence interval has the form:
+
+__point estimate __ $\pm$ __critical value__ * __standard error__
+
+For single proportions, a 95\% CI looks like:
+
+$p \pm 1.96 * \sqrt{\frac{p(1-p)}{n}}$
+
+### Interpretation
+
+Remember that we are treating the true population proportion as a fixed, unknown value. A 95\% CI suggests that if we were to collect 100 samples and calculate a 95\% CI for each one, 95 of them would contain the true population proportion. Essentially, we are 95\% sure that our 95\% CI contains the true population proportion.
+
+### Example
+
+Suppose we want to estimate the proportion of people who approve of a new policy. In a random sample of 100 people, 60 approved the policy.
+
+```{r ci-single-proportion}
+p <- 0.6  # Sample proportion
+n <- 100  # Sample size
+SE <- sqrt(p * (1 - p) / n) # standard error
+
+# 95% Confidence Interval for the observed proportion
+alpha <- 0.05
+cv <- qnorm(1 - alpha / 2) # critical value
+CI_lower <- p - cv * SE
+CI_upper <- p + cv * SE
+cat(CI_lower, CI_upper)
+```
+
+
+
+Interpret: 
+
+## Hypothesis Testing for a Single Proportion
+
+To test a hypothesis about a single proportion, we use a significance test such as the z-test for proportions.
+
+#### 1. Set Hypotheses
+
+Define your null ($H_0$) and alternative ($H_1$) hypotheses.Generally,
+
+$$H_0: \pi = \ ?$$
+
+$$H_1: \pi \neq \ ?$$
+
+#### 2. Identify Sampling Distribution of $H_0$:
+
+Assuming the null hypothesis is true, CLT states that $p \sim approx. N(\pi, \frac{\pi(1-\pi)}{n})$
+
+#### 3. Calculate p-value
+
+This is the probability, under the null hypothesis, of observing a result as extreme or more extreme than your observation.
+
+#### 4. Make a Decision and a Conclusion
+
+Small p-values suggest that it is quite unlikely to observe results like those we have observed. Generally, if the p-value is less than 0.05, we say that we have strong evidence against the null hypothesis. 
+
+
+### Example
+
+Testing if the true proportion of voters who support a candidate is different from 50% based on a sample of 100 voters where 60 voters expressed their support.
+
+#### 1. Set Hypotheses
+
+$$H_0: \pi = \ ?$$
+
+$$H_1: \pi \neq \ ?$$
+
+#### 2. Identify Sampling Distribution of $H_0$:
+
+$p \sim approx. N(?, \frac{?(1-?)}{?})$
+
+#### 3. Calculate p-value
+
+```{r}
+# two-sided alternative
+2*(1-pnorm(0.60,0.5,sqrt(0.5*0.5/100)))
+```
+
+
+#### 4. Make a Decision and a Conclusion
+
+
+#### Relationship between hypothesis testing and confidence intervals
+
+```{r}
+# Hypothesis test variables from the previous chunk
+pi_0 <- 0.5  # Hypothesized proportion
+x <- seq(0.3, 0.7, length = 1000) # range of x values
+y <- dnorm(x, mean = p, sd = SE) # sampling distribution: Normal Distribution based on sample proportion and SE
+
+# PDF
+plot(x, y, type = "l", lwd = 2, col = "blue", main = "Distribution of the Observed Proportion", xlab = "Proportion", ylab = "Density")
+abline(v = pi_0, col = "red", lwd = 2, lty = 2)
+
+# Confidence Interval
+abline(v = CI_lower, col = "green", lwd = 2, lty = 3)
+abline(v = CI_upper, col = "green", lwd = 2, lty = 3)
+
+# Adding legends
+legend("topleft", legend=c("PDF", "Observed Proportion", "95% CI Lower", "95% CI Upper"), 
+       col=c("blue", "red", "green", "green"), lty = c(1, 2, 3, 3), cex=0.8)
+
+
+```
+
+# Inference for the Difference between Two Proportions
+
+## Confidence Interval
+
+### Recap:
+
+The general form of confidence interval based on CLT:
+
+$[p_1-p_2\ \pm \ critical\ value\times\ SE]$, where $SE=\sqrt{\frac{p_1(1-p_1)}{n_1}+\frac{p_2(1-p_2)}{n_2}}$
+
+Conditions to meet:
+
+1.  Independence: Within each group data have to be independent from each other. The two groups have to be independent from one another.
+
+2.  Sample Size: At least 10 successes and 10 failures in each group.
+
+3.  Sample Size vs. Population Size: For each group the sample size needs to be smaller than 10% of the population.
+
+## Example:
+
+We consider an experiment for patients who underwent cardiopulmonary resuscitation (CPR) for a heart attack and were subsequently admitted to a hospital. These patients were randomly divided into a treatment group where they received a blood thinner or the control group where they did not receive a blood thinner. The outcome variable of interest was whether the patients survived for at least 24 hours. The results are shown below. Check whether we can
+model the difference in sample proportions using the normal distribution.
+
+**Question:** Do the control group and treatment groups have different survival rates?
+
+|           | Survived | Died |
+|:----------|---------:|-----:|
+| Control   |       11 |   39 |
+| Treatment |       14 |   26 |
+
+To construct a 90% confidence interval for the difference of two proportions ($\pi_1-\pi_2$), first we check whether all the conditions are met, then follow the following steps:
+
+Check Assumptions:
+
+-   **Independence**: The experiment is randomized, so the condition is satisfied.
+
+-   **Sample Size**: For each group, check if there are at least 10 successes and 10 failures:
+
+    -   Control: 11 survivals and 39 deaths → 11\> 10, 39\> 10 (Condition met)
+
+    -   Treatment: 14 survivals and 26 deaths → 14 \> 10, 26 \> 10 (Condition met)
+
+### 1. Calculate point estimate $p_1-p_2$:
+
+```{r}
+p1 <- 11 / (11 + 39)
+p2 <- 14 / (14 + 26)
+n1 <- 11 + 39
+n2 <- 14 + 26
+point_estimate <- p1 - p2
+point_estimate
+```
+
+### 2. Calculate critical value:
+
+```{r}
+cv <- qnorm(0.95)
+cv
+```
+
+### 3. Calculate standard error:
+
+```{r}
+se <- sqrt( (p1 * (1-p1) / n1) + (p2 * (1-p2) / n2) ) 
+se
+```
+
+### 4. Construct the 90% confidence interval:
+
+```{r}
+point_estimate - cv * se
+point_estimate + cv * se
+```
+
+90% CI for difference of two proportions is ( -.2870771,.02707706).
+
+So, we are 90% confident that the true **difference** in success rates between the control and treatment group lies between -.2870771 and .02707706.
+
+## Hypothesis Testing
+
+### 1. Set Hypotheses:
+
+$H_0:\pi_1=\pi_2$ vs. $H_A:\pi_1\neq\pi_2$
+
+$H_0$ : There is no difference between the population proportions
+
+$H_A$ : There is a difference between the population proportions
+
+### 2. Identify Sampling Distribution of $H_0$:
+
+If all the conditions are met, then according to CLT:
+
+$(p_1-p_2)\sim approx\ N(\pi_1-\pi_2,\ \frac{\pi_1(1-\pi_1)}{n_1}+\frac{\pi_2(1-\pi_2)}{n_2})$
+
+Under $H_0$, $\pi_1=\pi_2$, so we use pooled proportion to calculate SE:
+
+#### 2.1 Calculate pooled proportion:
+
+$p_{pooled}=\frac{n_1p_1+n_2p_2}{n_1+n_2}$
+
+```{r}
+p_pooled <- (p1*n1 + p2*n2) / (n1+n2)
+p_pooled
+```
+
+#### 2.2 Calculate SE:
+
+$SE = \sqrt{(\frac{p_{pooled}(1-p_{pooled})}{n_1}+\frac{p_{pooled}(1-p_{pooled})}{n_2})}$
+
+```{r}
+se <- sqrt( (p_pooled * (1-p_pooled) / n1) + (p_pooled * (1-p_pooled) / n2) )
+se
+```
+
+### 3. Calculate p-value:
+
+How likely are we to observe a difference of proportions in samples that is at least as extreme as the observed sample proportion difference ($p_1-p_2=-.13$)?
+
+```{r}
+point_estimate
+z <- (point_estimate - 0) / se
+pnorm(z)
+pnorm(z) * 2
+```
+
+```{r }
+#| echo: false
+x <- seq(-.3, .3, length = 1000)
+y <- dnorm(x, mean = 0, sd = se)
+plot(x, y, type = "l", lwd = 2, xlab = 'p1-p2', ylab = '')
+abline(v = point_estimate, lwd = 2, lty = 1)
+abline(v = -point_estimate, lwd = 2, lty = 1)
+```
+
+### 4. Make a Decision and a Conclusion:
+
+If the null hypothesis were true, then the probability of observing a difference of proportions in the sample that is at least extreme as -.13 would be 0.1712, and this is relatively high ( higher than 0.05). Therefore, the observed value ( $p_1-p_2=-.13$ ) is not significantly different from 0. We fail to reject the null and conclude that we have not found any evidence against the null.
+
+
