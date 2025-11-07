@@ -112,38 +112,6 @@ library(binom)
 binom.confint(n * p, n, conf.level = 0.95, methods="wilson")
 ```
 
-```{r}
-# Hypothesis test variables from the previous chunk
-pi_0 <- 0.5  # Hypothesized proportion
-p_hat <- 0.58  # Observed proportion
-n <- 100  # Sample size
-SE <- sqrt(p_hat * (1 - p_hat) / n)
-
-# 95% Confidence Interval for the observed proportion
-alpha <- 0.05
-z_alpha <- qnorm(1 - alpha / 2)
-CI_lower <- p_hat - z_alpha * SE
-CI_upper <- p_hat + z_alpha * SE
-
-# Normal Distribution based on observed proportion and SE
-x <- seq(0.3, 0.7, length = 1000)
-y <- dnorm(x, mean = p_hat, sd = SE)
-
-# PDF
-plot(x, y, type = "l", lwd = 2, col = "blue", main = "Distribution of the Observed Proportion", xlab = "Proportion", ylab = "Density")
-abline(v = pi_0, col = "red", lwd = 2, lty = 2)
-
-# Confidence Interval
-abline(v = CI_lower, col = "green", lwd = 2, lty = 3)
-abline(v = CI_upper, col = "green", lwd = 2, lty = 3)
-
-# Adding legends
-legend("topleft", legend=c("PDF", "Hypothesized Proportion", "95% CI Lower", "95% CI Upper"), 
-       col=c("blue", "red", "green", "green"), lty = c(1, 2, 3, 3), cex=0.8)
-
-
-```
-
 # Hypothesis Testing for a Single Proportion
 
 To test a hypothesis about a single proportion, we use a significance test such as the z-test for proportions.
@@ -177,3 +145,36 @@ Testing if the true proportion of voters who support a candidate is different fr
 2*(1-pnorm(0.58,0.5,sqrt(0.5*0.5/100)))
 
 ```
+
+```{r}
+# Hypothesis test variables from the previous chunk
+pi_0 <- 0.5  # Hypothesized proportion
+p_hat <- 0.58  # Observed proportion
+n <- 100  # Sample size
+SE <- sqrt(p_hat * (1 - p_hat) / n)
+
+# 95% Confidence Interval for the observed proportion
+alpha <- 0.05
+z_alpha <- qnorm(1 - alpha / 2)
+CI_lower <- p_hat - z_alpha * SE
+CI_upper <- p_hat + z_alpha * SE
+
+# Normal Distribution based on observed proportion and SE
+x <- seq(0.3, 0.7, length = 1000)
+y <- dnorm(x, mean = p_hat, sd = SE)
+
+# PDF
+plot(x, y, type = "l", lwd = 2, col = "blue", main = "Distribution of the Observed Proportion", xlab = "Proportion", ylab = "Density")
+abline(v = pi_0, col = "red", lwd = 2, lty = 2)
+
+# Confidence Interval
+abline(v = CI_lower, col = "green", lwd = 2, lty = 3)
+abline(v = CI_upper, col = "green", lwd = 2, lty = 3)
+
+# Adding legends
+legend("topleft", legend=c("PDF", "Hypothesized Proportion", "95% CI Lower", "95% CI Upper"), 
+       col=c("blue", "red", "green", "green"), lty = c(1, 2, 3, 3), cex=0.8)
+
+
+```
+
