@@ -102,6 +102,13 @@ Remember that we are treating the true population proportion as a fixed, unknown
 
 Suppose we want to estimate the proportion of people who approve of a new policy. In a random sample of 100 people, 60 approved the policy.
 
+Point Estimate: $p = 0.6$
+
+Critical Value: $1.96$ for a $95\%$ CI
+
+Standard Error: $\sqrt{\frac{p(1-p)}{n}} = \sqrt{\frac{0.5*0.5}{100}} = 0.05$
+
+$95\%$ CI: $0.6 \pm 1.96*0.05$ or $(0.502,0.698)
 
 # Hypothesis Testing for a Single Proportion
 
@@ -145,6 +152,12 @@ legend("topleft", legend=c("Distribution Under the Null", "Observed Proportion")
 
 ```
 
+
+```{r}
+
+2*(1-pnorm(0.58, 0.5, sqrt(0.5*0.5/100)))
+
+```
 
 We can also come to the same conclusion using confidence intervals. If the confidence interval contains the proportion from the null hypothesis (0.5), then we will fail to reject the null. If the confidence interval does not contain the proportion from the null hypothesis, then we will reject the null.
 
