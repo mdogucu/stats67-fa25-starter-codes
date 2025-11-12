@@ -1,0 +1,112 @@
+---
+title: "Exercise 6.28"
+format: html
+---
+
+## Hypotheses
+
+$$H_0: \pi_v = \pi_{nv}$$
+
+$$H_a: \pi_v \neq \pi_{nv}$$
+
+Similarly:
+
+$$H_0: \pi_v - \pi_{nv} =0$$
+
+$$H_a: \pi_v - \pi_{nv} \neq 0$$
+
+## Information given
+
+```{r}
+n_v <- 302
+p_v <- 143 / n_v
+p_v 
+n_nv <- 181
+p_nv <- 111 / 181
+p_nv
+```
+
+## Calculations
+
+**Point estimate**
+
+```{r}
+p_v - p_nv
+```
+
+**Pooled proportion**
+
+```{r}
+p_pooled <- (111 + 143) / (n_v + n_nv)
+p_pooled
+```
+
+```{r}
+se <- sqrt((p_pooled*(1-p_pooled)/n_v)+(p_pooled*(1-p_pooled)/n_nv))
+se
+```
+
+## Checking Conditions
+
+**Independence** The sample is random and we can safely assume that 181 < 10% of all mothers who don't take prenatal vitamins and 302 < 10% of all mothers who take prenatal vitamins. We can assume independence within each group. Considering a mother either takes prenatal vitamins or not, we can also assume independence between these groups.
+
+**Success-failure**
+
+```{r}
+181*p_pooled
+```
+
+```{r}
+181*(1-p_pooled)
+```
+
+```{r}
+302*p_pooled
+```
+
+```{r}
+302*(1-p_pooled)
+```
+
+All these values are greater than 10 and the success-failure condition has also been met.
+
+## Calculating a p-value
+
+```{r}
+p_value <- pnorm(p_v - p_nv, 0, se)*2
+p_value
+```
+
+Since the $p$-value of `r p_value` is less than 0.05 we reject the null hypothesis and conclude that there is a significant difference in autism rate of children born to mothers who take prenatal vitamins and those who do not. 
+Considering that the point estimate is negative, we can conclude that the rate of autism is lower for mothers who took prenatal vitamins. 
+
+## Calculating test statistic ($z$ score)
+
+```{r}
+test_statistic <- ((p_v - p_nv) - 0)/se
+test_statistic
+```
+
+```{r}
+critical_value <- qnorm(0.025)
+critical_value
+```
+
+Since the absolute value of the test statistic of `r abs(test_statistic)`  is greater than the critical value of `r abs(critical_value)` we reject the null and arrive at the same conclusion.
+
+## Confidence Interval
+
+```{r}
+se_unpooled <- sqrt((p_v*(1-p_v)/n_v)+(p_nv*(1-p_nv)/n_nv))
+se_unpooled
+```
+
+```{r}
+(p_v - p_nv) + critical_value*se_unpooled
+```
+
+```{r}
+(p_v - p_nv) - critical_value*se_unpooled
+```
+
+Considering that the confidence interval only has negative values, we once again conclude that the difference in proportion of autism in vitamin group and non-vitamin group is negative. In other words, vitamin group has significantly lower autism proportion than no-vitamin group.
