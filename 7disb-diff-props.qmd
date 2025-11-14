@@ -157,6 +157,5 @@ Exercise 6.22 provides data on sleep deprivation rates of Californians and Orego
 
 (a) Conduct a hypothesis test to determine if these data provide strong evidence the rate of sleep deprivation is different for the two states. (Reminder: Check conditions)
 
-Exercise 7.7 on page 293 of [the book](https://www.openintro.org/go/?id=os4_for_screen_readers&referrer=/book/os/index.php).
 
 
