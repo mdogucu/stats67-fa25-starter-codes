@@ -1,0 +1,303 @@
+```{r}
+#| echo: false
+#| message: false
+library(tidyverse)
+```
+
+# Inference for the Difference between Two Proportions
+
+## Confidence Interval
+
+### Recap:
+
+The general form of confidence interval based on CLT:
+
+$[p_1-p_2\ \pm \ critical\ value\times\ SE]$, where $SE=\sqrt{\frac{p_1(1-p_1)}{n_1}+\frac{p_2(1-p_2)}{n_2}}$
+
+Conditions to meet:
+
+1.  Independence: Within each group data have to be independent from each other. The two groups have to be independent from one another.
+
+2.  Sample Size: At least 10 successes and 10 failures in each group.
+
+3.  Sample Size vs. Population Size: For each group the sample size needs to be smaller than 10% of the population.
+
+## Example:
+
+We consider an experiment for patients who underwent cardiopulmonary resuscitation (CPR) for a heart attack and were subsequently admitted to a hospital. These patients were randomly divided into a treatment group where they received a blood thinner or the control group where they did not receive a blood thinner. The outcome variable of interest was whether the patients survived for at least 24 hours. The results are shown below. Check whether we can
+model the difference in sample proportions using the normal distribution.
+
+**Question:** Do the control group and treatment groups have different survival rates?
+
+|           | Survived | Died |
+|:----------|---------:|-----:|
+| Control   |       11 |   39 |
+| Treatment |       14 |   26 |
+
+To construct a 90% confidence interval for the difference of two proportions ($\pi_1-\pi_2$), first we check whether all the conditions are met, then follow the following steps:
+
+Check Assumptions:
+
+-   **Independence**: The experiment is randomized, so the condition is satisfied.
+
+-   **Sample Size**: For each group, check if there are at least 10 successes and 10 failures:
+
+    -   Control: 11 survivals and 39 deaths → 11\> 10, 39\> 10 (Condition met)
+
+    -   Treatment: 14 survivals and 26 deaths → 14 \> 10, 26 \> 10 (Condition met)
+
+-  **Sample size vs Population size**: control: 50 people. treatment: 40 people. 
+    -   population for control: all people who underwent CPR for a heart attack and were admitted to a hospital and did not receive blood thinners.
+    -   population size for control has to be greater than 500 people for this condition to hold.
+Because there are definitely more than 500 people who underwent CPR for a heart attack and were admitted to a hospital and did not receive blood thinners, this condition is met for the control group.
+    -   population for treatment: all people who underwent CPR for a heart attack and were admitted to a hospital and did receive blood thinners.
+    -   population size for treatment has to be greater than 400 people for this condition to hold.
+Because there are definitely more than 400 people who underwent CPR for a heart attack and were admitted to a hospital and did receive blood thinners, this condition is met for the treatment group.
+
+### 1. Calculate point estimate $p_1-p_2$:
+
+```{r}
+p1 <- 11 / (11 + 39)
+p2 <- 14 / (14 + 26)
+n1 <- 11 + 39
+n2 <- 14 + 26
+point_estimate <- p1 - p2
+point_estimate
+```
+
+### 2. Calculate critical value:
+
+```{r}
+# 90% confidence interval
+cv <- qnorm(0.95)
+cv
+```
+
+### 3. Calculate standard error:
+
+```{r}
+se <- sqrt( (p1 * (1-p1) / n1) + (p2 * (1-p2) / n2) ) 
+se
+```
+
+### 4. Construct the 90% confidence interval:
+
+```{r}
+point_estimate - cv * se
+point_estimate + cv * se
+```
+
+90% CI for difference of two proportions is ( -.2870771,.02707706).
+
+So, we are 90% confident that the true population **difference** in success rates between the control and treatment group lies between -.2870771 and .02707706.
+
+- make sure you are always drawing your conclusion to the population!
+
+## Hypothesis Testing
+
+### 1. Set hypotheses:
+
+$H_0:\pi_1=\pi_2$ vs. $H_A:\pi_1\neq\pi_2$
+
+$H_0$ : There is no difference between the population proportions
+
+$H_A$ : There is a difference between the population proportions
+
+### 2. Identify Sampling Distribution of $H_0$:
+
+If all the conditions are met, then according to CLT:
+
+$(p_1-p_2)\sim approx\ N(\pi_1-\pi_2,\ \frac{\pi_1(1-\pi_1)}{n_1}+\frac{\pi_2(1-\pi_2)}{n_2})$
+
+Under $H_0$, $\pi_1=\pi_2$, so we use pooled proportion to calculate SE:
+
+#### 2.1 Calculate pooled proportion:
+
+$p_{pooled}=\frac{n_1p_1+n_2p_2}{n_1+n_2}$
+
+```{r}
+p_pooled <- (p1*n1 + p2*n2) / (n1+n2)
+p_pooled
+```
+
+#### 2.2 Calculate SE:
+
+$SE = \sqrt{(\frac{p_{pooled}(1-p_{pooled})}{n_1}+\frac{p_{pooled}(1-p_{pooled})}{n_2})}$
+
+```{r}
+se <- sqrt( (p_pooled * (1-p_pooled) / n1) + (p_pooled * (1-p_pooled) / n2) )
+se
+```
+
+$(p_1-p_2)\sim approx\ N(\pi_1-\pi_2 = 0, 0.095^2)$
+
+### 3. Calculate p-value:
+
+How likely are we to observe a difference of proportions in samples that is at least as extreme as the observed sample proportion difference ($p_1-p_2=-.13$)?
+
+```{r}
+point_estimate
+# z score
+z <- (point_estimate - 0) / se
+z
+# because z is negative (and smaller than 0, pi1-pi2), we don't have to use lower.tail = FALSE
+pnorm(z)
+pnorm(z) * 2
+```
+
+```{r }
+#| echo: false
+x <- seq(-.3, .3, length = 1000)
+y <- dnorm(x, mean = 0, sd = se)
+plot(x, y, type = "l", lwd = 2, xlab = 'p1-p2', ylab = '')
+abline(v = point_estimate, lwd = 2, lty = 1)
+abline(v = -point_estimate, lwd = 2, lty = 1)
+```
+
+### 4. Make a Decision and a Conclusion:
+
+alpha = 0.05.
+p-value = 0.17.
+Because our p-value is greater than 0.05, we fail to reject the null hypothesis.
+
+If the null hypothesis were true, then the probability of observing a difference of proportions in the sample that is at least extreme as -.13 would be 0.1712, and this is relatively high ( higher than 0.05). Therefore, the observed value ( $p_1-p_2=-.13$ ) is not significantly different from 0. We fail to reject the null and conclude that we have not found any evidence against the null.
+
+
+# Inference for Single Mean
+
+means: $\bar{x}$ for our sample, $\mu$ for our population
+
+proportions: p for our sample, $\pi$ for our population
+
+## Confidence Interval
+
+We still follows the general form of CI: \[point estimate $\pm$ critical value $\times$ standard error\]
+
+$\bar{x}$ is the sample mean
+
+s is the sample standard deviation
+
+n is the sample size
+
+For single mean, CI is: $[\bar x\pm t_{n-1}^*\times SE]$, where $SE=\frac{s}{\sqrt n}$
+
+Conditions to meet:
+
+1.  Independence
+
+2.  Normality: The sample size should be greater than 30.
+
+## Example
+
+Given the heights of 50 random students in UCI, construct a 95% confidence interval for the average student height in UCI, assuming that all the conditions are met.
+
+1. Independence: 50 random students, so we'll assume independence.
+
+2. Normality: n = 50 > 30. 
+
+5.75, 6.22, 5.52, 5.55, 5.48, 4.72, 5.84, 5.38, 5.74, 6.20, 6.78, 5.74, 5.21, 5.55, 6.70, 4.73, 5.86, 5.38, 4.98, 5.17, 6.17, 5.62, 5.98, 5.62, 5.96, 6.18, 5.12, 5.92, 5.38, 4.78, 4.46, 5.50, 5.22, 5.38, 5.54, 5.06, 5.66, 5.50, 6.33, 4.68, 5.45, 6.69, 5.60, 4.90, 5.18, 5.46, 5.47, 5.43, 5.58, 5.71
+
+```{r}
+x <- c(5.75, 6.22, 5.52, 5.55, 5.48, 4.72, 5.84, 5.38, 
+       5.74, 6.20, 6.78, 5.74, 5.21, 5.55, 6.70, 4.73, 
+       5.86, 5.38, 4.98, 5.17, 6.17, 5.62, 5.98, 5.62, 
+       5.96, 6.18, 5.12, 5.92, 5.38, 4.78, 4.46, 5.50, 
+       5.22, 5.38, 5.54, 5.06, 5.66, 5.50, 6.33, 4.68, 
+       5.45, 6.69, 5.60, 4.90, 5.18, 5.46, 5.47, 5.43, 
+       5.58, 5.71)
+
+# sample size
+n <- 50
+# sample mean
+x_bar <- mean(x)
+# sample standard deviation
+s <- sd(x)
+# standard error
+se <- s / sqrt(n)
+# critical value
+cv <- qt(0.975, df = n-1) # qt(0.025, df = n-1)
+# lower bound
+x_bar - cv * se
+# upper bound
+x_bar + cv * se
+```
+
+We are 95% confident that the average student height in UCI is between 5.414 and 5.707 feet.
+
+## Hypothesis Testing
+
+Question: Is the average student height in UCI 6 ft?
+
+### 1. Set hypotheses.
+
+$H_0:\mu=6$ vs. $H_A:\mu\neq 6$
+
+### 2. Identify Sampling Distribution of $H_0$.
+
+By assuming the null hypothesis is true, we have:
+
+$\bar x\sim approx\ N(mean=6, sd=\frac{s}{\sqrt n})$
+
+sd of the sampling distribution is the standard error
+
+### 3. Calculate p-value.
+
+```{r}
+# t statistic, or t score
+t <- (x_bar - 6) / se
+t
+# t score follows t distribution with df = n-1
+```
+
+```{r}
+# p-value
+pt(t, df = n-1) * 2
+# t distribution is always centered at 0
+```
+
+### 4. Make a Decision and a Conclusion.
+
+If the null hypothesis were true ($\mu=6$) then probability of observing a sample statistic that is at least as extreme as the one that we have observed ($\bar x=5.56$) would be very close to 0. We consider this to be an evidence against the null since p-value is much less than 0.05, even close to 0. We have sufficient evidence that the average height of UCI students is different from 6 ft. 
+
+
+# Exercise (If time allows)
+
+Exercise 6.22 and 6.24 on page 254 of [the book](https://www.openintro.org/go/?id=os4_for_screen_readers&referrer=/book/os/index.php).
+
+Exercise 7.7 on page 293 of [the book](https://www.openintro.org/go/?id=os4_for_screen_readers&referrer=/book/os/index.php).
+
+a) H_0: $\mu = 8$  
+H_a: $\mu \neq 8$ 
+
+b) Conditions: independence (random sample, fulfilled), normality n > 30 (n = 25, so not fulfilled)
+
+xbar ~ approx N(mean = 8, sd = 0.77/sqrt(25))
+
+```{r}
+t_score = (7.73 - 8) / (0.77/sqrt(25))
+t_score
+```
+
+t-score ~ $t_{df = n-1 = 24}$
+
+```{r}
+pt(t_score, df = 24) * 2
+```
+
+alpha = 0.05 -> 95% CI
+
+Because our p-value > alpha = 0.05, we fail to reject the null hypothesis. There is not enough evidence to claim that New Yorkers sleep more or less than 8 hours per night. 
+
+95% CI: expect that 8 hours is inside the CI. 
+
+90% CI -> alpha = 0.1
+
+Because our p-value < alpha = 0.1, we reject the null hypothesis. There is enough evidence to claim that the average number of hours per night that New Yorkers sleep is different than 8. 
+
+90% CI: expect that 8 hours is not inside the CI
+
+Generally, if our $\mu = \#$ value is outside our 95% CI, we would expect to reject the null hypothesis at alpha = 0.05. 
+If our $\mu = \#$ value is inside our 95% CI, we would expect to fail to reject the null hypothesis at alpha = 0.05. 
+
+
+
