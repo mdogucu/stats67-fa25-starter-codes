@@ -1,0 +1,17 @@
+
+# Maximum Likelihood Estimation (MLE)
+
+## Steps of MLE
+1. Find the log-likelihood function, $\log L(\theta; x_1,...,x_n)$.
+2. Take the derivative of the log-likelihood with respect to the parameter we are estimating, $\frac{d}{d\theta}\log L(\theta;x_1,...,x_n)$.
+3. Set derivative to zero and solve for parameter we are interested in estimating, $\frac{d}{d\theta}\log L(\theta;x_1,...,x_n) = 0$.
+4. Check the second derivative for concavity, we want a maximum, $\frac{d^2}{d\theta^2}\log L(\theta;x_1,...,x_n)$.
+
+## You Try!
+Suppose we have independent identically distributed random variables, $Y_i$, where $Y_i \sim \text{Normal}(x_i\beta, 1)$, where $x_i$'s are given for $i = 1,...,n$.  Show that the MLE of $\beta$ is 
+$\frac{\sum_{i=1}^{n}x_iY_i}{\sum_{i=1}^{n}x_i^2}$.  Recall that the pdf of this random variable is
+$$
+f(Y_i|x_i,\beta) = \frac{1}{\sqrt{2\pi}}\exp\left[\frac{(Y_i - x_i\beta)^2}{2}\right].
+$$
+
+
