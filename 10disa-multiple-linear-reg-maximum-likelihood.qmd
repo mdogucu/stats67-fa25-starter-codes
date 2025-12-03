@@ -189,7 +189,7 @@ Linear regression: 8.25, 8.26, 8.31(a-c), 8.32(a-c), 8.33, 8.35
 
 1-mean: 7.1, 7.3, and 7.4 (write R code); 7.7, 7.11, 7.12, 7.31 (try to identify the variables), 7.51, 7.56; 7.57 & 7.58 (you can use this to practice writing hypotheses)
 
-2-mean: 7.47, 7.48, 7.49,  
+2-mean: 7.47, 7.48, 7.49  
 
 
 
@@ -205,5 +205,5 @@ Since there are **no calculators**, we can expect:
 
 - interpreting CI, p-value, and hypothesis test results
 
-- there will be at least one question on understanding studies and identifying their variables, drawing conclusions, etc. (1.41, 1.42)
+- there will be at least one question on understanding studies and identifying their variables, drawing conclusions, etc. (textbook practice 1.41, 1.42)
 
